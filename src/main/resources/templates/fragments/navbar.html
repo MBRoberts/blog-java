@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+</head>
+<body>
+    <header role="banner" id="fh5co-header">
+        <div class="container">
+            <nav th:fragment="navbar" class="navbar navbar-default">
+                <div class="navbar-header">
+
+                    <!-- Mobile Toggle Menu Button -->
+                    <a href="#" class="js-fh5co-nav-toggle fh5co-nav-toggle" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar"><i></i></a>
+                    <a class="navbar-brand" href="index.html">Blog</a>
+
+                </div>
+
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-right">
+
+                        <li><a href="#" data-nav-section="home"><span>Home</span></a></li>
+                        <li><a th:href="@{'/posts'}" data-nav-section="posts"><span>Posts</span></a></li>
+                        <li><a th:href="@{'/posts/create'}" data-nav-section="create-post"><span>Create Post</span></a></li>
+                        <li><a href="#" data-nav-section="users"><span>Users</span></a></li>
+                        <li><a href="#" data-nav-section="profile"><span>Profile</span></a></li>
+
+                    </ul>
+                </div>
+
+            </nav>
+        </div>
+    </header>
+
+</body>
+</html>
