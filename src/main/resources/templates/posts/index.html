@@ -11,17 +11,29 @@
     <section data-section="posts" style="background-color: #52d3aa">
         <div class="gradient"></div>
         <div class="container">
-            <h1>All Ads</h1>
+            <h1 style="color: #ffffff">All Posts</h1>
 
             <div class="posts" th:each="post : ${posts}" th:object="${post}">
-                <h2 th:text="*{title}">Title</h2>
+                <h2><a th:text="*{title}" th:href="@{'/posts/show/' + *{id}}"></a></h2>
+                <p class="date" th:text="${post.createAt}"></p>
+                <p class="date" th:text="${post.updateAt}"></p>
                 <p th:text="*{body}">Body</p>
             </div>
 
+            <div class="posts text-center">
+                <a class="btn btn-default" th:if="${page &gt; 1}" th:href="@{'/posts/' + ${(page - 1)}}" th:text="'&lt;'"></a>
+                <span th:if="${pages &gt; 0 }">
+                    <a th:each="page : ${#numbers.sequence(1, pages)}" th:href="@{'/posts/' + ${page}}" th:text="${page}" class="btn btn-default pageBtns"></a>
+                </span>
+                <a class="btn btn-default" th:if="${page &lt; pages}" th:href="@{'/posts/' + ${(page + 1)}}" th:text="'&gt;'"></a>
+            </div>
+
         </div>
-        <br/>
+
         <div class="slant"></div>
     </section>
+
+
 
     <div th:replace="fragments/js-scripts :: scripts"></div>
 

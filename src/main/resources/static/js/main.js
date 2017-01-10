@@ -79,6 +79,23 @@
         });
     };
 
+    var paginationBtns = function(){
+        var currentUrl = window.location.pathname;
+        var btns = document.getElementsByClassName("pageBtns");
+
+        for (var i = 0; i < btns.length; i++){
+            var btnHref = btns[i].getAttribute("href");
+
+            if (btnHref == currentUrl){
+                btns[i].classList.add("active");
+            }
+        }
+    };
+
+
+
+
+
     $(function(){
         // var $section = $('section[data-section]');
 
@@ -86,6 +103,18 @@
         navigationSection();
         windowScroll();
         // navActive();
+        paginationBtns();
+
     });
 
 }());
+
+var dateElements = document.getElementsByClassName('date');
+var formattedTime = "Crap";
+
+for (var i = 0; i < dateElements.length; i++){
+
+    formattedTime = moment(dateElements[i].innerText, 'dd-MMM-yyyy hh:mm:ss').fromNow();
+
+    dateElements[i].innerText = formattedTime;
+}

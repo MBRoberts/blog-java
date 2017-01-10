@@ -44,6 +44,7 @@ h1, h2, h3, h4, h5, h6 {
     font-family: "Source Sans Pro", Arial, sans-serif;
     font-weight: 400;
     margin: 0 0 30px 0;
+    opacity: 1;
 }
 
 ::-webkit-selection {
@@ -460,6 +461,7 @@ section{
     display: inline-block;
     height: 70px;
     bottom: 0;
+    margin-top: 25px;
     margin-bottom: -35px;
     padding: 0;
     width: 101%;
@@ -1240,6 +1242,7 @@ section{
     -webkit-transition: 0.3s;
     -o-transition: 0.3s;
     transition: 0.3s;
+
 }
 .btn.btn-primary {
     background: #52d3aa;
@@ -1397,9 +1400,8 @@ hr {
     margin: 50px;
 }
 
-.form-container,
-.posts {
-    background-color: #fefefe;
+.form-container {
+    background-color: #fbfbfb;
     padding: 50px;
     position: relative;
     top:150px;
@@ -1409,7 +1411,13 @@ hr {
 }
 
 .posts {
+    background-color: #fbfbfb;
+    padding: 50px;
     margin: 5px;
+    z-index: 4;
+    border: 2px solid #cfcfcf;
+    border-radius: 7px;
+    position: relative;
 }
 
 /*# sourceMappingURL=style.css.map */

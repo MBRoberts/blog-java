@@ -1,9 +1,37 @@
 package com.mbenroberts;
 
+import org.hibernate.annotations.*;
+import org.hibernate.validator.constraints.NotBlank;
+import org.ocpsoft.prettytime.PrettyTime;
+
+import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.validation.constraints.Size;
+import java.sql.Timestamp;
+
+@Entity
 public class Post {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotBlank(message="Title Cannot be empty")
+    @Column(nullable = false)
     private String title;
+
+    @NotBlank(message="Your post must have a body")
+    @Size(min = 10, message="Your body must have at least 10 characters")
+    @Column(nullable = false, columnDefinition = "text")
     private String body;
+
+    @Column
+    @CreationTimestamp
+    private Timestamp createAt;
+
+    @Column
+    @UpdateTimestamp
+    private Timestamp updateAt;
 
     public Post(Long id, String title, String body) {
         this.id = id;
@@ -42,4 +70,22 @@ public class Post {
     public void setBody(String body) {
         this.body = body;
     }
+
+
+    public Timestamp getCreateAt() {
+        return this.createAt;
+    }
+
+    public Timestamp getUpdateAt() {
+        return this.updateAt;
+    }
+
+    public void setCreateAt(Timestamp createAt) {
+        this.createAt = createAt;
+    }
+
+    public void setUpdateAt(Timestamp updateAt) {
+        this.updateAt = updateAt;
+    }
+
 }

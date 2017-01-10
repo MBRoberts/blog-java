@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/head :: head(${post.title})" ></head>
+
+<body>
+
+<nav th:replace="fragments/navbar :: navbar"></nav>
+<section data-section="posts" style="background-color: #52d3aa">
+    <div class="gradient"></div>
+    <div class="container">
+        <h1 style="color: #ffffff" th:text="${post.title}"></h1>
+
+        <div class="posts" th:object="${post}">
+            <h2 th:text="*{title}">Title</h2>
+            <p th:text="'id = ' + *{id}">ID</p>
+            <p th:text="*{body}">Body</p>
+            <a th:href="@{'/posts/edit/' + *{id}}" class="btn btn-default">Edit Post</a>
+        </div>
+
+
+    </div>
+
+    <div class="slant"></div>
+</section>
+
+
+
+<div th:replace="fragments/js-scripts :: scripts"></div>
+
+</body>
+
+</html>
