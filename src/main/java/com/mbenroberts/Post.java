@@ -2,7 +2,6 @@ package com.mbenroberts;
 
 import org.hibernate.annotations.*;
 import org.hibernate.validator.constraints.NotBlank;
-import org.ocpsoft.prettytime.PrettyTime;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
