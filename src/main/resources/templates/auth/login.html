@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/head :: head('Login')" ></head>
+
+<body>
+
+<nav th:replace="fragments/navbar :: navbar"></nav>
+
+<section data-section="login" style="background-color: #52d3aa">
+
+    <div class="gradient"></div>
+
+    <div class="container form-container">
+
+        <h2 class="text-center">Create Post</h2>
+
+        <form th:action="@{/login}" method="POST">
+
+            <div class="alert alert-danger" th:if="${param.error}">
+                Invalid Username and Password.
+            </div>
+
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" class="form-control" id="username" name="username" placeholder="Enter Username" autofocus="true" />
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" class="form-control" id="password" name="password" />
+            </div>
+
+            <button type="submit" class="btn btn-default">Submit</button>
+
+        </form>
+    </div>
+    <div class="slant"></div>
+</section>
+
+<div th:replace="fragments/js-scripts :: scripts"></div>
+
+</body>
+
+</html>

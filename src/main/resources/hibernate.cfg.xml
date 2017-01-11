@@ -28,6 +28,7 @@
 
         <!-- Add mapped classes here -->
         <mapping class="com.mbenroberts.Post"/>
+        <mapping class="com.mbenroberts.User"/>
         <!-- ... -->
     </session-factory>
 </hibernate-configuration>

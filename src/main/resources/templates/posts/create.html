@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 
 <head th:replace="fragments/head :: head('Create A Post')" ></head>
 
@@ -26,6 +27,8 @@
                     <label for="body">Body:</label>
                     <textarea class="form-control" id="body" th:field="*{body}"></textarea>
                 </div>
+
+                <input type="hidden" th:field="*{createdBy}" sec:authorize="principal.userId" />
 
                 <button type="submit" class="btn btn-default">Submit</button>
             </form>

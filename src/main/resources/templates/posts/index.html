@@ -15,9 +15,9 @@
 
             <div class="posts" th:each="post : ${posts}" th:object="${post}">
                 <h2><a th:text="*{title}" th:href="@{'/posts/show/' + *{id}}"></a></h2>
-                <p class="date" th:text="${post.createAt}"></p>
-                <p class="date" th:text="${post.updateAt}"></p>
-                <p th:text="*{body}">Body</p>
+                <p>Posted <span class="date" th:text="${#dates.format(post.createAt, 'yyyy-MM-dd hh:mm:ss')}"></span></p>
+                <p>Last Updated <span class="date" th:text="${post.updateAt}"></span></p>
+                <p th:text="*{#strings.abbreviate(body, 100)}">Body</p>
             </div>
 
             <div class="posts text-center">
