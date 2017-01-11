@@ -24,10 +24,6 @@ public class Post {
     @Column(nullable = false, columnDefinition = "text")
     private String body;
 
-
-//    @ManyToOne
-//    private User createdBy;
-
     @Column
     @CreationTimestamp
     private Timestamp createAt;
@@ -35,6 +31,20 @@ public class Post {
     @Column
     @UpdateTimestamp
     private Timestamp updateAt;
+
+    public Post(Long id, String title, String body) {
+        this.id = id;
+        this.title = title;
+        this.body = body;
+    }
+
+    public Post(String title, String body) {
+        this.title = title;
+        this.body = body;
+    }
+
+    public Post() {
+    }
 
     public Long getId() {
         return id;
@@ -60,6 +70,7 @@ public class Post {
         this.body = body;
     }
 
+
     public Timestamp getCreateAt() {
         return this.createAt;
     }
@@ -67,14 +78,6 @@ public class Post {
     public Timestamp getUpdateAt() {
         return this.updateAt;
     }
-
-//    public User getCreatedBy() {
-//        return createdBy;
-//    }
-//
-//    public void setCreatedBy(User createdBy) {
-//        this.createdBy = createdBy;
-//    }
 
     public void setCreateAt(Timestamp createAt) {
         this.createAt = createAt;

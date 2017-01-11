@@ -92,24 +92,13 @@
         }
     };
 
-    var timeFormatting = function () {
-        var dateElements = document.getElementsByClassName('date');
-        var formattedTime = "Crap";
 
-        for (var i = 0; i < dateElements.length; i++){
-
-            formattedTime = moment(dateElements[i].innerText, 'yyyy-MM-DD hh:mm:ss').fromNow();
-
-            dateElements[i].innerText = formattedTime;
-        }
-    };
 
 
 
     $(function(){
         // var $section = $('section[data-section]');
 
-        timeFormatting();
         burgerMenu();
         navigationSection();
         windowScroll();
@@ -120,3 +109,12 @@
 
 }());
 
+var dateElements = document.getElementsByClassName('date');
+var formattedTime = "Crap";
+
+for (var i = 0; i < dateElements.length; i++){
+
+    formattedTime = moment(dateElements[i].innerText, 'dd-MMM-yyyy hh:mm:ss').fromNow();
+
+    dateElements[i].innerText = formattedTime;
+}

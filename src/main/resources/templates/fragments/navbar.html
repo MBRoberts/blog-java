@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" />
 </head>
@@ -17,13 +16,14 @@
                 </div>
 
                 <div id="navbar" class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav navbar-right" sec:authorize="isFullyAuthenticated()">
+                    <ul class="nav navbar-nav navbar-right">
+
                         <li><a href="#" data-nav-section="home"><span>Home</span></a></li>
                         <li><a th:href="@{'/posts/1'}" data-nav-section="posts"><span>Posts</span></a></li>
                         <li><a th:href="@{'/posts/create'}" data-nav-section="create-post"><span>Create Post</span></a></li>
                         <li><a href="#" data-nav-section="users"><span>Users</span></a></li>
                         <li><a href="#" data-nav-section="profile"><span>Profile</span></a></li>
-                        <li><a th:href="@{/logout}"><span>Logout</span></a></li>
+
                     </ul>
                 </div>
 
