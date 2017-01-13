@@ -14,9 +14,14 @@
 
         <div class="posts" th:object="${post}">
             <h2 th:text="*{title}">Title</h2>
-            <p th:text="'id = ' + *{id}">ID</p>
+            <p th:text="'Posted By ' + *{user.username}"></p>
+            <p>Posted <span th:text="*{createAt}" class="date"></span></p>
+            <p>Last updated <span th:text="*{updateAt}" class="date"></span></p>
+            <div>Body:</div>
             <p th:text="*{body}">Body</p>
-            <a th:href="@{'/posts/edit/' + *{id}}" class="btn btn-default">Edit Post</a>
+            <a th:if="${belongsToUser}" th:href="@{'/posts/edit/' + *{id}}" class="btn btn-default">Edit Post</a>
+            <a th:if="${belongsToUser}" th:href="#" class="btn btn-danger" id="delete-btn">Delete Post</a>
+            <form th:if="${belongsToUser}" th:action="@{'/posts/delete/' + ${id}}" method="post" id="delete-form"></form>
         </div>
 
 

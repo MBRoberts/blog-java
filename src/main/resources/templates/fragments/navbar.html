@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" />
@@ -11,20 +12,30 @@
 
                     <!-- Mobile Toggle Menu Button -->
                     <a href="#" class="js-fh5co-nav-toggle fh5co-nav-toggle" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar"><i></i></a>
-                    <a class="navbar-brand" href="index.html">Blog</a>
+                    <a th:if="${ !isLoggedIn }" class="navbar-brand" th:href="@{'/posts'}">Blog</a>
+                    <a th:if="${ isLoggedIn }" class="navbar-brand" th:href="@{'/users/show/' + ${loggedInUser.id}}" th:text="${loggedInUser.username}"></a>
 
                 </div>
 
                 <div id="navbar" class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav navbar-right">
 
-                        <li><a href="#" data-nav-section="home"><span>Home</span></a></li>
-                        <li><a th:href="@{'/posts/1'}" data-nav-section="posts"><span>Posts</span></a></li>
-                        <li><a th:href="@{'/posts/create'}" data-nav-section="create-post"><span>Create Post</span></a></li>
-                        <li><a href="#" data-nav-section="users"><span>Users</span></a></li>
-                        <li><a href="#" data-nav-section="profile"><span>Profile</span></a></li>
+                    <ul th:if="${ isLoggedIn }" class="nav navbar-nav navbar-right">
+                        <li><a th:href="@{ '/posts' }" data-nav-section="posts"><span>Posts</span></a></li>
+                        <li><a th:href="@{ '/posts/create' }" data-nav-section="create-post"><span>Create Post</span></a></li>
+                        <li><a th:href="@{ '/users' }" data-nav-section="users"><span>Users</span></a></li>
+                        <li><a id="logout-btn" href="#">Logout</a></li>
+                        <form th:action="@{/logout}" method="post" id="logout"></form>
+                    </ul>
+
+                    <ul th:if="${ !isLoggedIn }" class="nav navbar-nav navbar-right">
+
+                        <li><a th:href="@{'/posts'}" data-nav-section="posts"><span>Posts</span></a></li>
+                        <li><a th:href="@{'/users/register'}" data-nav-section="register"><span>Register</span></a></li>
+                        <li><a th:href="@{'/login'}" data-nav-section="login"><span>Login</span></a></li>
 
                     </ul>
+
+
                 </div>
 
             </nav>

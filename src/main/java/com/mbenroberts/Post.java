@@ -24,13 +24,16 @@ public class Post {
     @Column(nullable = false, columnDefinition = "text")
     private String body;
 
-    @Column
+    @Column(nullable = false, updatable = false)
     @CreationTimestamp
     private Timestamp createAt;
 
     @Column
     @UpdateTimestamp
     private Timestamp updateAt;
+
+    @ManyToOne
+    private User user;
 
     public Post(Long id, String title, String body) {
         this.id = id;
@@ -70,21 +73,27 @@ public class Post {
         this.body = body;
     }
 
-
     public Timestamp getCreateAt() {
         return this.createAt;
-    }
-
-    public Timestamp getUpdateAt() {
-        return this.updateAt;
     }
 
     public void setCreateAt(Timestamp createAt) {
         this.createAt = createAt;
     }
 
+    public Timestamp getUpdateAt() {
+        return this.updateAt;
+    }
+
     public void setUpdateAt(Timestamp updateAt) {
         this.updateAt = updateAt;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/head :: head('Users')" ></head>
+
+<body>
+
+<nav th:replace="fragments/navbar :: navbar"></nav>
+
+<section data-section="users" style="background-color: #52d3aa">
+
+    <div class="gradient"></div>
+
+    <div class="container">
+
+        <h1 style="color: #ffffff">All Users</h1>
+
+        <div th:if="${ flash != null }" th:text="${ flash }"></div>
+
+        <div class="posts" th:each="user : ${ users }" th:object="${ user }">
+
+            <h2><a th:text="*{ username }" th:href="@{'/users/show/' + *{ id }}"></a></h2>
+            <p>Email: <span th:text="*{ email }"></span></p>
+            <p>User Since <span class="date" th:text="*{ createAt }"></span></p>
+
+        </div>
+
+    </div>
+
+    <div class="slant"></div>
+
+</section>
+
+<div th:replace="fragments/js-scripts :: scripts"></div>
+
+</body>
+
+</html>

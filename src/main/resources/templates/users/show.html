@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/head :: head(${user.username})" ></head>
+
+<body>
+
+<nav th:replace="fragments/navbar :: navbar"></nav>
+<section data-section="users" style="background-color: #52d3aa">
+    <div class="gradient"></div>
+    <div class="container">
+        <h1 style="color: #ffffff" th:text="${user.username}"></h1>
+
+        <div class="posts" th:object="${user}">
+            <h2 th:text="*{username}"></h2>
+            <p th:text="'Email: ' + *{email}"></p>
+            <p>Member since <span class="date" th:text="*{createAt}"></span></p>
+            <a th:if="${belongsToUser}" th:href="@{'/users/edit/' + *{id}}" class="btn btn-default">Edit Account</a>
+
+        </div>
+
+    </div>
+
+    <div class="slant"></div>
+</section>
+
+
+
+<div th:replace="fragments/js-scripts :: scripts"></div>
+
+</body>
+
+</html>

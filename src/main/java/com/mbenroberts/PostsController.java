@@ -1,5 +1,6 @@
 package com.mbenroberts;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
@@ -7,33 +8,38 @@ import org.springframework.ui.Model;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 @Controller
 @RequestMapping("/posts")
-public class PostsController {
+public class PostsController extends BaseController{
 
-    @GetMapping("/{page}")
+    @Autowired
+    private Posts postDao;
+
+    @GetMapping
     @SuppressWarnings("unchecked")
-    public String index(@PathVariable int page, Model model) {
+    public String index(Model model) {
 
-        List<Post> posts = new ArrayList<>(DaoFactory.getPostsDao().all(page));
+        List<Post> posts = new ArrayList((Collection) postDao.findAll());
 
         Collections.reverse(posts);
 
-        Long count = DaoFactory.getPostsDao().getPostsCount();
-        Long pages = (count % 2 == 0) ? count / 2 : (count / 2) + 1;
-
-        model.addAttribute("pages", pages);
         model.addAttribute("posts", posts);
-        model.addAttribute("pageNum", page);
+        model.addAttribute("loggedInUser", loggedInUser());
+        model.addAttribute("isLoggedIn", isLoggedIn());
+
         return "posts/index";
     }
 
     @GetMapping("/create")
     public String create(Model model) {
         model.addAttribute("post", new Post());
+        model.addAttribute("loggedInUser", loggedInUser());
+        model.addAttribute("isLoggedIn", isLoggedIn());
+
         return "posts/create";
     }
 
@@ -43,35 +49,66 @@ public class PostsController {
         if (errors.hasErrors()){
             model.addAttribute("errors", errors);
             model.addAttribute("post", post);
+
+            model.addAttribute("loggedInUser", loggedInUser());
+            model.addAttribute("isLoggedIn", isLoggedIn());
             return "posts/create";
         }
 
-        DaoFactory.getPostsDao().save(post);
-        return "redirect:/posts/1";
+        post.setUser(loggedInUser());
+        postDao.save(post);
+
+        return "redirect:/posts";
     }
 
     @GetMapping("/show/{id}")
     public String showPost(@PathVariable Long id, Model model){
-        model.addAttribute("post", DaoFactory.getPostsDao().getPostById(id));
+
+        Post post = postDao.findOne(id);
+
+        model.addAttribute("post", post);
+        model.addAttribute("loggedInUser", loggedInUser());
+        model.addAttribute("isLoggedIn", isLoggedIn());
+        model.addAttribute("belongsToUser", postBelongsToUser(post));
+
         return "posts/show";
     }
 
     @GetMapping("/edit/{id}")
     public String editPost(@PathVariable Long id, Model model){
-        model.addAttribute("post", DaoFactory.getPostsDao().getPostById(id));
-        return "posts/edit";
+
+        Post post = postDao.findOne(id);
+        boolean belongsToUser = postBelongsToUser(post);
+
+        if (belongsToUser) {
+
+            model.addAttribute("post", postDao.findOne(id));
+            model.addAttribute("loggedInUser", loggedInUser());
+            model.addAttribute("isLoggedIn", isLoggedIn());
+
+            return "posts/edit";
+        }
+
+        return "redirect:/posts";
     }
 
     @PostMapping("/edit/{id}")
     public String editPost(@Valid Post post, Errors errors, Model model){
 
         if(errors.hasErrors()){
+
             model.addAttribute("errors", errors);
             model.addAttribute("post", post);
+            model.addAttribute("loggedInUser", loggedInUser());
+            model.addAttribute("isLoggedIn", isLoggedIn());
+
             return "posts/edit";
         }
 
-        DaoFactory.getPostsDao().update(post);
-        return "redirect:/posts/1";
+        post.setUser(loggedInUser());
+
+        postDao.save(post);
+
+        return "redirect:/posts";
     }
 }
