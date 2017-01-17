@@ -1,4 +1,4 @@
-package com.mbenroberts;
+package com.mbenroberts.models;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;

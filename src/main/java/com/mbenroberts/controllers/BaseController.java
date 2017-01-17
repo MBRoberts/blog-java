@@ -1,5 +1,7 @@
-package com.mbenroberts;
+package com.mbenroberts.controllers;
 
+import com.mbenroberts.models.Post;
+import com.mbenroberts.models.User;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 

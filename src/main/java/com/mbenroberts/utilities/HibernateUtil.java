@@ -1,4 +1,4 @@
-package com.mbenroberts;
+package com.mbenroberts.utilities;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;

@@ -1,5 +1,7 @@
-package com.mbenroberts;
+package com.mbenroberts.controllers;
 
+import com.mbenroberts.models.User;
+import com.mbenroberts.interfaces.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;

@@ -1,5 +1,6 @@
-package com.mbenroberts;
+package com.mbenroberts.interfaces;
 
+import com.mbenroberts.models.Post;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;

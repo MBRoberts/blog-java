@@ -1,4 +1,4 @@
-package com.mbenroberts;
+package com.mbenroberts.models;
 
 import org.hibernate.annotations.*;
 import org.hibernate.validator.constraints.NotBlank;
@@ -34,6 +34,9 @@ public class Post {
 
     @ManyToOne
     private User user;
+
+    @Column
+    private String imageURL;
 
     public Post(Long id, String title, String body) {
         this.id = id;
@@ -95,5 +98,13 @@ public class Post {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getImageURL() {
+        return imageURL;
+    }
+
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
     }
 }

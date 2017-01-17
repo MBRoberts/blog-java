@@ -1,5 +1,6 @@
-package com.mbenroberts;
+package com.mbenroberts.interfaces;
 
+import com.mbenroberts.models.UserRole;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 

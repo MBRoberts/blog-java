@@ -1,12 +1,20 @@
-package com.mbenroberts;
+package com.mbenroberts.controllers;
 
+import com.mbenroberts.models.Post;
+import com.mbenroberts.interfaces.Posts;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -14,10 +22,13 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/posts")
-public class PostsController extends BaseController{
+public class PostsController extends BaseController {
 
     @Autowired
     private Posts postDao;
+
+    @Value("${file-upload-path}")
+    private String uploadPath;
 
     @GetMapping
     @SuppressWarnings("unchecked")
@@ -44,7 +55,9 @@ public class PostsController extends BaseController{
     }
 
     @PostMapping("/create")
-    public String save(@Valid Post post, Errors errors, Model model){
+    public String save(@Valid Post post, Errors errors, Model model,
+                       @RequestParam(name="file") MultipartFile uploadedFile,
+                       RedirectAttributes ra){
 
         if (errors.hasErrors()){
             model.addAttribute("errors", errors);
@@ -55,6 +68,23 @@ public class PostsController extends BaseController{
             return "posts/create";
         }
 
+        String filename = uploadedFile.getOriginalFilename();
+        String filepath = Paths.get(uploadPath, filename).toString();
+        File destinationFile = new File(filepath);
+
+        try {
+
+            uploadedFile.transferTo(destinationFile);
+            ra.addFlashAttribute("flash", "File successfully uploaded!");
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+            ra.addFlashAttribute("flash", "Oops! Something went wrong! " + e);
+
+        }
+
+        post.setImageURL(filename);
         post.setUser(loggedInUser());
         postDao.save(post);
 

@@ -1,5 +1,8 @@
-package com.mbenroberts;
+package com.mbenroberts.utilities;
 
+import com.mbenroberts.interfaces.Roles;
+import com.mbenroberts.interfaces.Users;
+import com.mbenroberts.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

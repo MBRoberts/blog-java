@@ -1,4 +1,4 @@
-package com.mbenroberts;
+package com.mbenroberts.models;
 
 import javax.persistence.*;
 
