@@ -38,6 +38,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Post> posts;
 
+    @Column
+    private String profileImage;
+
     public User() {
     }
 
@@ -102,5 +105,13 @@ public class User {
 
     public void setPosts(List<Post> posts) {
         this.posts = posts;
+    }
+
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
     }
 }

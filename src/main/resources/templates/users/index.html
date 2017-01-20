@@ -21,6 +21,7 @@
         <div class="posts" th:each="user : ${ users }" th:object="${ user }">
 
             <h2><a th:text="*{ username }" th:href="@{'/users/show/' + *{ id }}"></a></h2>
+            <div class="cropper"><img th:src="@{'uploads/' + *{profileImage}}" class="post-pic"/></div>
             <p>Email: <span th:text="*{ email }"></span></p>
             <p>User Since <span class="date" th:text="*{ createAt }"></span></p>
 

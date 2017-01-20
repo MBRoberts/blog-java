@@ -20,10 +20,17 @@
 
             <div class="posts" th:each="post : ${posts}" th:object="${post}">
 
-                <h2><a th:text="*{title}" th:href="@{'/posts/show/' + *{id}}"></a></h2>
-                <p class="date" th:text="${post.createAt}"></p>
-                <p class="date" th:text="${post.updateAt}"></p>
-                <p th:text="*{#strings.abbreviate(body, 100)}">Body</p>
+                <h2><a class="title" th:text="*{title}" th:href="@{'/posts/show/' + *{id}}"></a></h2>
+                <div class="cropper"><img th:src="@{'uploads/' + *{imageURL}}" class="post-pic"/></div>
+                <div class="text-right wrapper">
+                    <p class="subtitle">Posted By
+                        <b><a th:href="@{'users/show/' + *{user.id}}" th:text="*{user.username}"></a></b>
+                        <img class="profile-img-posts-index" th:src="@{'uploads/' + *{user.profileImage}}" />
+                    </p>
+                    <p class="subtitle">Posted <b><span class="date" th:text="${post.createAt}"></span></b></p>
+                    <p class="subtitle">Last updated <b><span class="date" th:text="${post.updateAt}"></span></b></p>
+                </div>
+                <p th:text="*{#strings.abbreviate(body, 65)}">Body</p>
 
             </div>
 
@@ -32,8 +39,6 @@
         <div class="slant"></div>
 
     </section>
-
-
 
     <div th:replace="fragments/js-scripts :: scripts"></div>
 

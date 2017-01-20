@@ -55,8 +55,10 @@ public class PostsController extends BaseController {
     }
 
     @PostMapping("/create")
-    public String save(@Valid Post post, Errors errors, Model model,
-                       @RequestParam(name="file") MultipartFile uploadedFile,
+    public String save(@Valid Post post,
+                       Errors errors,
+                       Model model,
+                       @RequestParam(name="image") MultipartFile uploadedFile,
                        RedirectAttributes ra){
 
         if (errors.hasErrors()){
@@ -68,23 +70,29 @@ public class PostsController extends BaseController {
             return "posts/create";
         }
 
-        String filename = uploadedFile.getOriginalFilename();
-        String filepath = Paths.get(uploadPath, filename).toString();
-        File destinationFile = new File(filepath);
+        if(!uploadedFile.isEmpty()) {
 
-        try {
+            String fileName = loggedInUser().getId() + uploadedFile.getOriginalFilename();
+            String filePath = Paths.get(uploadPath, fileName).toString();
+            File destinationFile = new File(filePath);
 
-            uploadedFile.transferTo(destinationFile);
-            ra.addFlashAttribute("flash", "File successfully uploaded!");
+            try {
 
-        } catch (IOException e) {
+                uploadedFile.transferTo(destinationFile);
+                ra.addFlashAttribute("flash", "File successfully uploaded!");
 
-            e.printStackTrace();
-            ra.addFlashAttribute("flash", "Oops! Something went wrong! " + e);
+            } catch (IOException e) {
 
+                e.printStackTrace();
+                ra.addFlashAttribute("flash", "Oops! Something went wrong! " + e);
+
+            }
+
+            post.setImageURL(fileName);
+        } else {
+            post.setImageURL("no-image.jpg");
         }
 
-        post.setImageURL(filename);
         post.setUser(loggedInUser());
         postDao.save(post);
 
@@ -123,7 +131,12 @@ public class PostsController extends BaseController {
     }
 
     @PostMapping("/edit/{id}")
-    public String editPost(@Valid Post post, Errors errors, Model model){
+    public String editPost(@Valid Post post,
+                           @RequestParam(name = "image") MultipartFile uploadedFile,
+                           @PathVariable Long id,
+                           Errors errors,
+                           Model model,
+                           RedirectAttributes ra){
 
         if(errors.hasErrors()){
 
@@ -133,6 +146,30 @@ public class PostsController extends BaseController {
             model.addAttribute("isLoggedIn", isLoggedIn());
 
             return "posts/edit";
+        }
+
+        if(!uploadedFile.isEmpty()) {
+            String fileName = loggedInUser().getId() + uploadedFile.getOriginalFilename();
+            String filePath = Paths.get(uploadPath, fileName).toString();
+            File destinationFile = new File(filePath);
+
+            try {
+
+                uploadedFile.transferTo(destinationFile);
+                ra.addFlashAttribute("flash", "File successfully uploaded!");
+
+            } catch (IOException e) {
+
+                e.printStackTrace();
+                ra.addFlashAttribute("flash", "Oops! Something went wrong! " + e);
+
+            }
+            post.setImageURL(fileName);
+        } else {
+
+            Post existingPost = postDao.findOne(id);
+            post.setImageURL(existingPost.getImageURL());
+
         }
 
         post.setUser(loggedInUser());

@@ -14,9 +14,22 @@
 
         <div class="posts" th:object="${user}">
             <h2 th:text="*{username}"></h2>
+            <img class="profile-img-show" th:src="'/uploads/' + *{profileImage}" />
             <p th:text="'Email: ' + *{email}"></p>
             <p>Member since <span class="date" th:text="*{createAt}"></span></p>
             <a th:if="${belongsToUser}" th:href="@{'/users/edit/' + *{id}}" class="btn btn-default">Edit Account</a>
+        </div>
+
+        <div class="posts" th:each="post : ${posts}" th:object="${post}">
+
+            <h2><a class="title" th:text="*{title}" th:href="@{'/posts/show/' + *{id}}"></a></h2>
+            <div class="cropper"><img th:src="@{'/uploads/' + *{imageURL}}" class="post-pic"/></div>
+            <div class="text-right wrapper">
+
+                <p class="subtitle">Posted <b><span class="date" th:text="${post.createAt}"></span></b></p>
+                <p class="subtitle">Last updated <b><span class="date" th:text="${post.updateAt}"></span></b></p>
+            </div>
+            <p th:text="*{#strings.abbreviate(body, 65)}">Body</p>
 
         </div>
 

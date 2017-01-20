@@ -1,19 +1,24 @@
 package com.mbenroberts.controllers;
 
+import com.mbenroberts.interfaces.Posts;
+import com.mbenroberts.models.Post;
 import com.mbenroberts.models.User;
 import com.mbenroberts.interfaces.Users;
+import com.mbenroberts.utilities.NoProfileImage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -27,11 +32,23 @@ public class UsersController extends BaseController {
     private Users usersDao;
 
     @Autowired
+    private Posts postsDao;
+
+    @Autowired
     private PasswordEncoder encoder;
+
+    @Value("${file-upload-path}")
+    private String uploadPath;
 
     @GetMapping
     @SuppressWarnings("unchecked")
-    public String index(Model model) {
+    public String index(Model model,
+                        RedirectAttributes ra) {
+
+        if(!isLoggedIn()){
+            ra.addFlashAttribute("flash", "You need to be logged in to view this page");
+            return "redirect:/posts";
+        }
 
         List<User> users = new ArrayList((Collection) usersDao.findAll());
 
@@ -55,7 +72,9 @@ public class UsersController extends BaseController {
     @PostMapping("/register")
     public String save(@Valid User user,
                        Errors errors,
-                       Model model, RedirectAttributes ra){
+                       Model model,
+                       RedirectAttributes ra,
+                       @RequestParam(name="image") MultipartFile uploadedFile){
 
         if (errors.hasErrors()){
             model.addAttribute("errors", errors);
@@ -63,6 +82,29 @@ public class UsersController extends BaseController {
             model.addAttribute("loggedInUser", loggedInUser());
             model.addAttribute("isLoggedIn", isLoggedIn());
             return "users/register";
+        }
+
+        if(!uploadedFile.isEmpty()) {
+
+            String fileName = uploadedFile.getOriginalFilename();
+            String filePath = Paths.get(uploadPath, fileName).toString();
+            File destinationFile = new File(filePath);
+
+            try {
+
+                uploadedFile.transferTo(destinationFile);
+                ra.addFlashAttribute("flash", "File successfully uploaded!");
+
+            } catch (IOException e) {
+
+                e.printStackTrace();
+                ra.addFlashAttribute("flash", "Oops! Something went wrong! " + e);
+
+            }
+
+            user.setProfileImage(fileName);
+        } else {
+            user.setProfileImage("profile/" + NoProfileImage.getRandomPlaceholder());
         }
 
         user.setPassword(encoder.encode(user.getPassword()));
@@ -75,7 +117,13 @@ public class UsersController extends BaseController {
 
     @GetMapping("/show/{id}")
     public String showUser(@PathVariable Long id,
-                           Model model){
+                           Model model,
+                           RedirectAttributes ra){
+
+        if(!isLoggedIn()){
+            ra.addFlashAttribute("flash", "You need to be logged in first");
+            return "redirect:/posts";
+        }
 
         User loggedInUser = loggedInUser();
         boolean belongsToUser = false;
@@ -84,7 +132,12 @@ public class UsersController extends BaseController {
             belongsToUser = id.equals(loggedInUser.getId());
         }
 
+        List<Post> posts = postsDao.findByUserId(id);
+
+        Collections.reverse(posts);
+
         model.addAttribute("user", usersDao.findOne(id));
+        model.addAttribute("posts", posts);
         model.addAttribute("loggedInUser", loggedInUser());
         model.addAttribute("isLoggedIn", isLoggedIn());
         model.addAttribute("belongsToUser", belongsToUser);
@@ -124,24 +177,59 @@ public class UsersController extends BaseController {
     }
 
     @PostMapping("/edit/{id}")
-    public String editUser(@Valid User user,
-                           Errors errors,
-                           Model model,
-                           RedirectAttributes ra){
+    public String editUser(Model model,
+                           RedirectAttributes ra,
+                           @RequestParam(name = "username") String username,
+                           @RequestParam(name = "email") String email,
+                           @RequestParam(name = "image") MultipartFile uploadedFile,
+                           @PathVariable Long id){
 
         User loggedInUser = loggedInUser();
+        User user = usersDao.findOne(id);
+        boolean usernameIsEmpty = username.isEmpty();
+        boolean emailIsEmpty = email.isEmpty();
 
-        if(errors.hasErrors()){
-            model.addAttribute("errors", errors);
-            model.addAttribute("user", user);
+        if(usernameIsEmpty || emailIsEmpty) {
+
+            ra.addFlashAttribute("flash", "Please fill out both Username and Email");
+            model.addAttribute("user", loggedInUser);
             model.addAttribute("loggedInUser", loggedInUser);
             model.addAttribute("isLoggedIn", isLoggedIn());
+
             return "users/edit";
         }
 
 
-            usersDao.save(user);
-            ra.addFlashAttribute("flash", "User Edited Successfully");
+
+
+        if(!uploadedFile.isEmpty()) {
+
+            String fileName = loggedInUser().getId() + uploadedFile.getOriginalFilename();
+            String filePath = Paths.get(uploadPath, fileName).toString();
+            File destinationFile = new File(filePath);
+
+            try {
+
+                uploadedFile.transferTo(destinationFile);
+                ra.addFlashAttribute("flash", "File successfully uploaded!");
+
+            } catch (IOException e) {
+
+                e.printStackTrace();
+                ra.addFlashAttribute("flash", "Oops! Something went wrong! " + e);
+
+            }
+            user.setProfileImage(fileName);
+        } else {
+
+            user.setProfileImage(user.getProfileImage());
+
+        }
+        user.setUsername(username);
+        user.setEmail(email);
+
+        usersDao.save(user);
+        ra.addFlashAttribute("flash", "User Edited Successfully");
 
 
         return "redirect:/users";

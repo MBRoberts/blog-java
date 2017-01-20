@@ -10,26 +10,48 @@
 <section data-section="posts" style="background-color: #52d3aa">
     <div class="gradient"></div>
     <div class="container">
-        <h1 style="color: #ffffff" th:text="${post.title}"></h1>
 
         <div class="posts" th:object="${post}">
             <h2 th:text="*{title}">Title</h2>
-            <p th:text="'Posted By ' + *{user.username}"></p>
+
+            <div class="pull-right action-btns">
+                <a th:if="${belongsToUser}" th:href="@{'/posts/edit/' + *{id}}" class="btn btn-default">Edit Post</a>
+                <a th:if="${belongsToUser}" href="#" class="btn btn-danger" id="delete-btn">Delete Post</a>
+            </div>
+
+            <p>Posted By <a th:href="@{'/users/show/' + *{user.id}}" th:text="*{user.username}"></a></p>
             <p>Posted <span th:text="*{createAt}" class="date"></span></p>
             <p>Last updated <span th:text="*{updateAt}" class="date"></span></p>
+            <br />
             <div>Body:</div>
             <p th:text="*{body}">Body</p>
-            <a th:if="${belongsToUser}" th:href="@{'/posts/edit/' + *{id}}" class="btn btn-default">Edit Post</a>
-            <a th:if="${belongsToUser}" th:href="#" class="btn btn-danger" id="delete-btn">Delete Post</a>
-            <form th:if="${belongsToUser}" th:action="@{'/posts/delete/' + ${id}}" method="post" id="delete-form"></form>
-        </div>
 
+            <form th:if="${belongsToUser}" th:action="@{'/posts/delete/' + ${id}}" method="post" id="delete-form"></form>
+
+            <hr/>
+
+            <div id="disqus_thread"></div>
+        </div>
 
     </div>
 
     <div class="slant"></div>
 </section>
 
+
+<script type="text/javascript">
+    var disqus_config = function () {
+        this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+
+    (function() { // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+        s.src = '//reddit-dev-1.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
 
 
 <div th:replace="fragments/js-scripts :: scripts"></div>

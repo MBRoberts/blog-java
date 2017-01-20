@@ -12,19 +12,25 @@
     <div class="gradient"></div>
     <div class="container form-container">
 
-        <h2 class="text-center">Register</h2>
+        <h2 class="text-center">Edit Your Account</h2>
 
-        <form th:action="@{'/users/edit/' + ${loggedInUser.id}}" th:object="${user}" method="POST">
+        <div th:if="${ flash != null }" th:text="${ flash }"></div>
+
+        <form th:action="@{'/users/edit/' + ${loggedInUser.id}}" th:object="${user}" method="POST" enctype="multipart/form-data">
             <div class="alert alert-danger" th:if="${ #fields.hasErrors('username') }" th:errors="*{username}"></div>
             <div class="form-group">
                 <label for="username">Username:</label>
-                <input type="text" class="form-control" id="username" th:field="*{username}" placeholder="Enter Username" autofocus="true" />
+                <input type="text" class="form-control" id="username" name="username" th:field="*{username}" placeholder="Enter Username" autofocus="true" />
             </div>
 
-            <div class="alert alert-danger" th:if="${ #fields.hasErrors('email') }" th:errors="*{email}"></div>
             <div class="form-group">
                 <label for="email">Email:</label>
-                <input type="text" class="form-control" id="email" th:field="*{email}" placeholder="Enter Email" />
+                <input type="text" class="form-control" id="email" th:field="*{email}" name="email" placeholder="Enter Email" />
+            </div>
+
+            <div class="form-group">
+                <label for="image">Upload Profile Image: </label>
+                <input type="file" class="form-control" id="image" name="image" />
             </div>
 
             <button type="submit" class="btn btn-default">Submit</button>
